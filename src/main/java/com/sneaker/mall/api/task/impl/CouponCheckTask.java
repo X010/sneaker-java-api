@@ -3,6 +3,8 @@ package com.sneaker.mall.api.task.impl;
 import com.sneaker.mall.api.dao.admin.CouponDetailDao;
 import com.sneaker.mall.api.model.CouponDetail;
 import com.sneaker.mall.api.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.List;
  */
 public class CouponCheckTask extends Task {
     private final static int PAGE_SIZE = 100;
+    private final static Logger LOG = LoggerFactory.getLogger(CouponCheckTask.class);
 
     @Autowired
     private CouponDetailDao couponDetailDao;
@@ -50,6 +53,7 @@ public class CouponCheckTask extends Task {
                         if (couponDetail.getCoupon_use_end().getTime() < System.currentTimeMillis()) {
                             couponDetail.setStatus(8);
                             this.couponDetailDao.updateCouponDetail(couponDetail);
+                            LOG.info("id->" + couponDetail.getId() + " coupon_name->" + couponDetail.getCoupon_name() + " status->" + couponDetail.getStatus());
                         }
                     }
                 }
