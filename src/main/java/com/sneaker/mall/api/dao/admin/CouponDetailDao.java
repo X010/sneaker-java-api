@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -50,4 +52,21 @@ public interface CouponDetailDao {
      */
     @Update("update  db_coupon_detail set status=#{status}  where id=#{id}")
     public void updateCouponDetail(CouponDetail couponDetail);
+
+    /**
+     * 统计 锁定或未使用的记录数
+     *
+     * @return
+     */
+    @Select("select count(1) from db_coupon_detail where status=2 or status=3")
+    public int countCouponDetail();
+
+    /**
+     * 分页获取红包详情列表
+     * @param start
+     * @param limit
+     * @return
+     */
+    @Select("select * from db_coupon_detail where status=2 or status=3 limit #{start},#{limit}")
+    public List<CouponDetail> getCouponDetailByPage(@Param("start") int start, @Param("limit") int limit);
 }
