@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!--  同步百度地图地址解析-->
+    <bean id="GeoLocationJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <bean class="com.sneaker.mall.api.task.impl.AnalysisGeoLocation"/>
+        </property>
+        <property name="targetMethod" value="run"/>
+        <property name="concurrent" value="true"/>
+    </bean>
+
+    <bean id="GeoLocationCronTrgger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="GeoLocationJobDetail"/>
+        <property name="cronExpression" value="0 0/2 * * * ?"/>
+    </bean>
+
+    <!-- 同步收货地址信息 -->
+    <bean id="addressJobDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <bean class="com.sneaker.mall.api.task.impl.CustomerAddressTask"/>
+        </property>
+        <property name="targetMethod" value="run"/>
+        <property name="concurrent" value="true"/>
+    </bean>
+    <bean id="addressJobCronTrgger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="addressJobDetail"/>
+        <property name="cronExpression" value="0 0/5 * * * ?"/>
+    </bean>
+
+    <!-- 同步订单到ERP任务 -->
+    <bean id="simpleJobDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <bean class="com.sneaker.mall.api.task.impl.SubmitOrderToErpTask"/>
+        </property>
+        <property name="targetMethod" value="run"/>
+        <property name="concurrent" value="true"/>
+    </bean>
+    <bean id="submitOrderToErpJobCronTrgger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="simpleJobDetail"/>
+        <property name="cronExpression" value="0 0/1 * * * ?"/>
+    </bean>
+
+    <!-- 统计商品在下单商城的销售情况 -->
+    <bean id="simpleCountSalesJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <bean class="com.sneaker.mall.api.task.impl.CountGoodsSalesNumTask"/>
+        </property>
+        <property name="targetMethod" value="run"/>
+        <property name="concurrent" value="true"/>
+    </bean>
+    <bean id="countSalesJobCronTrgger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="simpleCountSalesJobDetail"/>
+        <property name="cronExpression" value="0 0 0/1 * * ?"/>
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="submitOrderToErpJobCronTrgger"></ref>
+                <ref bean="countSalesJobCronTrgger"></ref>
+                <ref bean="addressJobCronTrgger"></ref>
+                <ref bean="GeoLocationCronTrgger"></ref>
+            </list>
+        </property>
+    </bean>
+</beans>

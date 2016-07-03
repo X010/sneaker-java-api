@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <context:component-scan base-package="com.sneaker.mall.api"></context:component-scan>
+
+    <!-- Runner 库配置 -->
+    <bean id="runnerDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 驱动名称 -->
+        <property name="driverClassName" value="${server.driverClassName}"></property>
+        <!-- 数据库链接URL -->
+        <property name="url" value="${runner.server.jdbcUrl}"></property>
+        <!--  用户名-->
+        <property name="username" value="${runner.server.username}"></property>
+        <!-- 密码 -->
+        <property name="password" value="${runner.server.password}"></property>
+        <!-- Filter Chain -->
+        <property name="filters" value="${filters}"></property>
+        <!-- 最大的激活数 -->
+        <property name="maxActive" value="${maxActive}"></property>
+        <!-- 初始Connection个数 -->
+        <property name="initialSize" value="${initialSize}"></property>
+        <!-- 获取链接时最大的待侍时间 -->
+        <property name="maxWait" value="${maxWait}"></property>
+        <!-- 最小链接池数量 -->
+        <property name="minIdle" value="${minIdle}"></property>
+        <!-- Destory 线程 检测连接间隔时间 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"></property>
+        <!-- Destory 线程中如果检测到当前连接的最后活跃时间和当前时间差值大于,则关闭当前链接 -->
+        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"></property>
+        <!-- 用来检测连接是否有效的SQL,要求是一个查询语句 -->
+        <property name="validationQuery" value="${validationQuery}"></property>
+        <!-- 建议配置为true 不影响性能，并且保证安人全性 -->
+        <property name="testWhileIdle" value="${testWhileIdle}"></property>
+        <!-- 申请链接时执行VQ 检测链接是否有效，会降低性能 -->
+        <property name="testOnBorrow" value="${testOnBorrow}"></property>
+        <!-- 归还链接时执行VQ 检测连接是否有效,会降低性能 -->
+        <property name="testOnReturn" value="${testOnReturn}"></property>
+        <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}"></property>
+        <!-- 对于建立时间超过 Timeout的链接强制闭关 -->
+        <property name="removeAbandoned" value="${removeAbandoned}"></property>
+        <!-- 指定链接多长时间就需要被强制关闭 -->
+        <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}"></property>
+        <!-- 指定强制关闭链接时是否记录，当前线程的堆栈信息到日志中 -->
+        <property name="logAbandoned" value="${logAbandoned}"></property>
+    </bean>
+
+    <bean id="runnerSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="runnerDataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="typeAliasesPackage" value="com.sneaker.mall.api.model"/>
+    </bean>
+
+    <bean id="runnerSqlScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="runnerSqlSessionFactory"/>
+        <property name="basePackage" value="com.sneaker.mall.api.dao.info"/>
+    </bean>
+
+    <!-- 业务管理系统配置 -->
+    <bean id="adminDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 驱动名称 -->
+        <property name="driverClassName" value="${server.driverClassName}"></property>
+        <!-- 数据库链接URL -->
+        <property name="url" value="${admin.server.jdbcUrl}"></property>
+        <!--  用户名-->
+        <property name="username" value="${admin.server.username}"></property>
+        <!-- 密码 -->
+        <property name="password" value="${admin.server.password}"></property>
+        <!-- Filter Chain -->
+        <property name="filters" value="${filters}"></property>
+        <!-- 最大的激活数 -->
+        <property name="maxActive" value="${maxActive}"></property>
+        <!-- 初始Connection个数 -->
+        <property name="initialSize" value="${initialSize}"></property>
+        <!-- 获取链接时最大的待侍时间 -->
+        <property name="maxWait" value="${maxWait}"></property>
+        <!-- 最小链接池数量 -->
+        <property name="minIdle" value="${minIdle}"></property>
+        <!-- Destory 线程 检测连接间隔时间 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"></property>
+        <!-- Destory 线程中如果检测到当前连接的最后活跃时间和当前时间差值大于,则关闭当前链接 -->
+        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"></property>
+        <!-- 用来检测连接是否有效的SQL,要求是一个查询语句 -->
+        <property name="validationQuery" value="${validationQuery}"></property>
+        <!-- 建议配置为true 不影响性能，并且保证安人全性 -->
+        <property name="testWhileIdle" value="${testWhileIdle}"></property>
+        <!-- 申请链接时执行VQ 检测链接是否有效，会降低性能 -->
+        <property name="testOnBorrow" value="${testOnBorrow}"></property>
+        <!-- 归还链接时执行VQ 检测连接是否有效,会降低性能 -->
+        <property name="testOnReturn" value="${testOnReturn}"></property>
+        <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}"></property>
+        <!-- 对于建立时间超过 Timeout的链接强制闭关 -->
+        <property name="removeAbandoned" value="${removeAbandoned}"></property>
+        <!-- 指定链接多长时间就需要被强制关闭 -->
+        <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}"></property>
+        <!-- 指定强制关闭链接时是否记录，当前线程的堆栈信息到日志中 -->
+        <property name="logAbandoned" value="${logAbandoned}"></property>
+    </bean>
+    <bean id="adminSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="adminDataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="typeAliasesPackage" value="com.sneaker.mall.api.model"/>
+    </bean>
+    <bean id="adminSqlScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="adminSqlSessionFactory"/>
+        <property name="basePackage" value="com.sneaker.mall.api.dao.admin"/>
+    </bean>
+
+    <!-- 读取价格接口 -->
+    <bean id="readPriceUrl" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${erp.price.url}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="erpSyncOrder" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${erp.stockin.url}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="salemanFlag" class="java.lang.Integer">
+        <constructor-arg index="0">
+            <value>${role.saleman}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="dispathFlag" class="java.lang.Integer">
+        <constructor-arg index="0">
+            <value>${role.dispath}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="cgFlag" class="java.lang.Integer">
+        <constructor-arg index="0">
+            <value>${role.cg}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="salemanAdminFlag" class="java.lang.Integer">
+        <constructor-arg index="0">
+            <value>${role.saleman.admin}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="img_server_prefix" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${photo.server.url}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="default_img_url" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${default.server.url}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="delete_erp_order" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${erp.deleteorder.url}</value>
+        </constructor-arg>
+    </bean>
+
+    <!-- 支付配置 -->
+    <bean id="qr_pay_wx" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${pay.qr.wx}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="qr_pay_ali" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${pay.qr.ali}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="pay_return_url" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${pay.qr.returnurl}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="pay_notice" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${erp.pay.notice}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="achievement_url" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${erp.achievement.url}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="login_url" class="java.lang.String">
+        <constructor-arg index="0">
+            <value>${erp.login.url}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="aliyunUtil" class="com.sneaker.mall.api.util.AliyunUtil">
+        <constructor-arg index="0">
+            <value>${ALIYUN.bucketName}</value>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <value>${ALIYUN.path}</value>
+        </constructor-arg>
+        <constructor-arg index="2">
+            <value>${ALIYUN.OSS_ENDPOINT}</value>
+        </constructor-arg>
+        <constructor-arg index="3">
+            <value>${ALIYUN.ACCESS_ID}</value>
+        </constructor-arg>
+        <constructor-arg index="4">
+            <value>${ALIYUN.ACCESS_KEY}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="baiduGeoLocation" class="com.sneaker.mall.api.util.BaiduLocationUtil">
+        <constructor-arg index="0"><value>${GEO.BAIDU}</value></constructor-arg>
+    </bean>
+
+    <import resource="Quartz.xml"></import>
+</beans>

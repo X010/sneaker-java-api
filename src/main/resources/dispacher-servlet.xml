@@ -1,0 +1,70 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:component-scan base-package="com.sneaker.mall.api"/>
+
+    <mvc:resources mapping="/css/**" location="/css/**"/>
+    <mvc:resources mapping="/js/**" location="/js/**"/>
+    <mvc:resources mapping="/font/**" location="/font/**"/>
+    <mvc:resources mapping="/img/**" location="/img/**"/>
+    <mvc:resources mapping="/media/**" location="/media/**"/>
+    <mvc:resources mapping="/images/**" location="/images/**"/>
+    <mvc:resources mapping="/doc/**" location="/doc/**"/>
+    <mvc:resources mapping="/fonts/**" location="/fonts/**"/>
+    <mvc:resources location="/resources/**" mapping="/resources/**"/>
+    <mvc:resources location="/favicon.ico" mapping="/favicon.ico"/>
+    <mvc:resources location="/jquery.js" mapping="/jquery.js"/>
+
+    <!-- Forwards requests to the "/" resource to the "welcome" view -->
+    <!--   <mvc:view-controller path="/" view-name="redirect:main.do" />
+       <mvc:view-controller path="/search.html" view-name="redirect:main.do" />-->
+    <bean
+            class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean
+                        class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    <bean
+            class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="stringHttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="stringHttpMessageConverter"
+          class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding">
+            <value>utf-8</value>
+        </property>
+        <property name="maxUploadSize">
+            <value>10000000000</value>
+        </property>
+    </bean>
+    <import resource="freemarker.xml"/>
+    <mvc:annotation-driven></mvc:annotation-driven>
+</beans>

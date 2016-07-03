@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script language="JavaScript" src="/jquery.js"></script>
+</head>
+<body>
+<script language="JavaScript">
+    //提交订单
+    function submitOrder(postData) {
+        var resultData = null;
+        if (postData != null) {
+            $.ajax({
+                url: "/b2/order/createorder.action",
+                type: "POST",
+                timeout: 30000,
+                async: false,
+                data: postData,
+                dataType: "json",
+                success: function (data, textStatus) {
+                    resultData = data;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    resultData = null;
+                }
+            });
+            return resultData;
+        }
+    }
+</script>
+</body>
+</html>
