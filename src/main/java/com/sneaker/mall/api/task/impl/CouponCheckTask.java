@@ -47,7 +47,7 @@ public class CouponCheckTask extends Task {
                     int start = (i - 1) * PAGE_SIZE;
                     List<CouponDetail> couponDetails = this.couponDetailDao.getCouponDetailByPage(start, PAGE_SIZE);
                     for (CouponDetail couponDetail : couponDetails) {
-                        if (couponDetail.getCoupon_use_end().getTime() >= System.currentTimeMillis()) {
+                        if (couponDetail.getCoupon_use_end().getTime() < System.currentTimeMillis()) {
                             couponDetail.setStatus(8);
                             this.couponDetailDao.updateCouponDetail(couponDetail);
                         }
